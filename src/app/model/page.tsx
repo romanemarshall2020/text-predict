@@ -1,7 +1,7 @@
 // Import React hooks and necessary libraries, with TypeScript types
 "use client"
 import React, { useEffect, useState } from 'react';
-import { pipeline } from '@xenova/transformers';
+import { pipeline, TextGenerationOutput, TextGenerationSingle } from '@xenova/transformers';
 
 // Define the component, marking it specifically for client-side execution
 function Model() {
@@ -22,7 +22,7 @@ function Model() {
     };
 
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>,) => {
+    const handleOnKeyUp = async (event: React.KeyboardEvent<HTMLInputElement>,) => {
         event.preventDefault();
         if (!inputText.trim()) {
             setError('Please enter some text to generate.');
@@ -37,10 +37,10 @@ function Model() {
                 const response = await generator(inputText);
                 console.log('Response:', response);
 
-                const output = response[0]; // Adjust based on the actual output structure
-
+                const output : TextGenerationSingle = response[0] as TextGenerationSingle; // Adjust based on the actual output structure
                 console.log(typeof (output))
-                setGeneratedText(JSON.stringify(output));
+                console.log(output.generated_text)
+                setGeneratedText(JSON.stringify(output.generated_text));
             } catch (error) {
                 console.error('Error generating text:', error);
                 setError('Failed to generate text. Please try again.');
@@ -52,8 +52,8 @@ function Model() {
 
     return (
         <>
-            <form onSubmit={handleSubmit}>
-                <input type="text" value={inputText} onChange={handleInputChange} placeholder="Enter text" />
+            <form>
+                <input type="text" value={inputText} onChange={handleInputChange} onKeyUp={handleOnKeyUp} placeholder="Enter text" />
                 <button type="submit" disabled={isLoading}>{isLoading ? 'Generating...' : 'Generate'}</button>
             </form>
             {error && <p style={{ color: 'red' }}>{error}</p>}
