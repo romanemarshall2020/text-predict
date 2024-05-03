@@ -38,7 +38,7 @@ function Model() {
                 console.log('Response:', response);
 
                 const output : TextGenerationSingle = response[0] as TextGenerationSingle; // Adjust based on the actual output structure
-                console.log(typeof (output))
+                 console.log(typeof (output))
                 console.log(output.generated_text)
                 setGeneratedText(JSON.stringify(output.generated_text));
             } catch (error) {
